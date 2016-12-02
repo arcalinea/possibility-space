@@ -1,0 +1,39 @@
+body {
+  background-color: black;
+}
+
+.content {
+  background-color: white;
+  width: 80%;
+  margin: 19em 20% 19em 5%;
+  border-radius: 10px;
+  min-height: 800px;
+  margin-top: 4em;
+  padding: 0 2em;
+  left: 5%;
+  padding: 3em;
+}
+
+.faq {
+  margin-top: 3em;
+}
+
+.question {
+  padding-bottom: 1px;
+}
+
+.explore-pane {
+  background-color: grey;
+  border-radius: 10px;
+  height: 150px;
+}
+
+.explore-pane .fa {
+  margin-top: 13%;
+}
+
+.explore-pane h3{
+  /*height: 140px;
+  display: table-cell;
+  vertical-align: middle;*/
+}
