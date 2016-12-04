@@ -16,7 +16,14 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from django.contrib import auth
+
 urlpatterns = [
+    url(r'^$', include('exchange.urls')),
     url(r'^exchange/', include('exchange.urls')),
     url(r'^admin/', admin.site.urls),
+
+    url(r'^accounts/', include('registration.urls')),
+
+    url('^', include('django.contrib.auth.urls')),
 ]
