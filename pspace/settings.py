@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     # 'exchange',
 ]
 
+ACCOUNT_ACTIVATION_DAYS = 7
+LOGIN_REDIRECT_URL = '/participate/dashboard'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -70,6 +73,11 @@ TEMPLATES = [
         },
     },
 ]
+
+TEMPLATE_CONTEXT_PROCESSORS = (
+    "django.contrib.auth.context_processors.auth", # define this in your settings
+    "django.core.context_processors.request",
+)
 
 WSGI_APPLICATION = 'pspace.wsgi.application'
 

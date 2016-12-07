@@ -1,14 +1,16 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+import logging, logging.handlers
 
 from django.contrib.auth.models import User
-from .forms import SignupForm
-from django.contrib.auth import authenticate, login
+# from .forms import SignupForm
+from django.contrib.auth import authenticate, login, logout
 
 from django.contrib.auth.forms import UserCreationForm
-from django.template.context_processors import csrf
+from django.template.context_processors import csrf, request
 
+from forms import RegistrationForm
 
 # Create your views here.
 
@@ -23,45 +25,59 @@ def participate_index(request, args):
 
 #####
 def register(request):
-     if request.method == 'POST':
-         form = UserCreationForm(request.POST)
-         if form.is_valid():
-             form.save()
-             return HttpResponseRedirect('/accounts/register/complete')
-
-     else:
-         form = UserCreationForm()
-     token = {}
-     token.update(csrf(request))
-     token['form'] = form
-
-     return render_to_response('registration/registration_form.html', token)
-
-def registration_complete(request):
-     return render_to_response('registration/registration_complete.html')
-#####
-
-def sign_up(request, args):
+    logging.debug("IN AUTH_REGISTER")
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = SignupForm(request.POST)
-        # check whether it's valid:
+        form = RegistrationForm(request.POST)
         if form.is_valid():
-            # process the data in form.cleaned_data as required
-            # redirect to a new URL:
-            return HttpResponseRedirect('/')
-    # if a GET (or any other method) we'll create a blank form
+            user = User.objects.create_user(
+            username=form.cleaned_data['username'],
+            password=form.cleaned_data['password'],
+            email=form.cleaned_data['email']
+            )
+            return HttpResponseRedirect('/register/success/')
+        else:
+            form = RegistrationForm()
+            variables = RequestContext(request, {
+            'form': form
+            })
+            return render_to_response(
+            'accounts/registration_form.html',
+            variables,
+            )
     else:
-        form = SignupForm()
-    return render(request, 'exchange/participate/index.html')
+        logging.debug("Rendering registration form")
+        return render(request, 'accounts/registration_form.html')
+        logging.debug("Not using post method")
+    # return HttpResponse("Register")
 
-def login(request):
-    ## just testing user login
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        login(request, user)
-        # Redirect to a success page.
-    # else:
-        # Return an 'invalid login' error message.
+# @csrf_protect
+def register_success(request):
+     return render(request, 'accounts/registration_complete.html')
+
+def auth_login(request):
+    logging.debug("IN LOGIN METHOD")
+    if request.method == "POST":
+        logging.debug("TEST POST")
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        logging.info('username=%s', username)
+        logging.info("password=%s", password)
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            logging.debug("User is authenticated")
+            # Redirect to a success page.
+            return HttpResponseRedirect('/exchange/participate/dashboard')
+        else:
+            return HttpResponse("Not signed in")
+    else:
+        return render(request, 'accounts/login.html')
+        logging.debug("Not using post method")
+
+def logout(request):
+    logging.debug("LOGGING OUT")
+    return render(request, '/accounts/logout.html')
+
+def participate_dashboard(request, args):
+    user = request.user
+    logging.debug("CURRENT USER=%s", user)
+    return render(request, 'exchange/participate/dashboard.html')

@@ -17,13 +17,14 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from django.contrib import auth
+from django.contrib.auth.views import login
 
 urlpatterns = [
-    url(r'^$', include('exchange.urls')),
+    url(r'^', include('exchange.urls')),
     url(r'^exchange/', include('exchange.urls')),
     url(r'^admin/', admin.site.urls),
+    url(r'^login/$', login, {'template_name': 'registration/login.html'}),
+    # url(r'^register/$', register, {'template_name': 'registration/register.html'}),
 
-    url(r'^accounts/', include('registration.urls')),
-
-    url('^', include('django.contrib.auth.urls')),
+    # url('^', include('django.contrib.auth.urls')),
 ]

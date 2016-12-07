@@ -6,28 +6,27 @@
       <h3>Participate: Coming soon.</h3>
     </div>
     <p>
-      <form method="post" action="{% url 'exchange/participate/signup' %}">
-        {% csrf_token %}
 
-        {% if form.errors %}
-        <p>Your Username or Password were not entered correctly. Please try again.</p>
-        {% endif %}
+      <div class="container">
+          <div class="row">
+          <div class="col-md-6 col-md-offset-3">
+            <div class="panel panel-login">
+              <div class="panel-heading">
+                <div class="row">
+                  <div class="col-xs-6">
+                    <a href="/login" id="login-form-link">Login</a>
+                  </div>
+                  <div class="col-xs-6">
+                    <a href="/register" id="register-form-link">Register</a>
+                  </div>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <table>
-          <tr>
-            <td>{{ form.username.label_tag }}</td>
-            <td>{{ form.username }}</td>
-            <td>{{ form.username.errors }}</td>
-          </tr>
-          <tr>
-            <td>{{ form.password.label_tag }}</td>
-            <td>{{ form.password }}</td>
-            <td>{{ form.password.errors }}</td>
-          </tr>
-        </table>
-
-        <input type="submit" value="login" />
-      </form>
     </p>
   </div>
 {% endblock %}
