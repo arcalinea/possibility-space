@@ -12,6 +12,8 @@ from django.template.context_processors import csrf, request
 
 from forms import RegistrationForm
 
+from models import Profile, Category, Exchange
+
 # Create your views here.
 
 def index(request):
@@ -84,8 +86,39 @@ def participate_dashboard(request, args):
     return render(request, 'exchange/participate/dashboard.html')
 
 #####
+def create_profile(request, args):
+    if request.method == "POST":
+        logging.debug("TEST CREATE PROFILE")
+        bio = request.POST.get('bio')
+        address = request.POST.get('address')
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+    else:
+        return render(request, 'accounts/create_profile.html')
+
+def invite_friends(request, args):
+    if request.method == "POST":
+        logging.debug("TEST INVITE FRIENDS")
+        name = request.POST.get('name')
+        email = request.POST.get('email')
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+    else:
+        return render(request, 'accounts/invite_friends.html')
+
+
 def create_request(request):
-    logging.debug("CREATE REQUEST")
+    if request.method == "POST":
+        logging.debug("TEST POST REQUEST")
+        category = request.POST.get('category')
+        link = request.POST.get('link')
+        description = request.POST.get('description')
+        receiver = request.user
+        return render(request, 'exchange/participate/dashboard.html')
+    else:
+        return render(request, 'exchange/participate/create_request.html')
 
 def create_gift(request):
-    logging.debug("CREATE GIFT")
+    if request.method == "POST":
+        logging.debug("TEST POST GIFT")
+        return render(request, 'exchange/participate/dashboard.html')
+    else:
+        return render(request, 'exchange/participate/give_gift.html')

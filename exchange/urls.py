@@ -8,7 +8,9 @@ urlpatterns = [
     url(r'^(explore)$', views.explore_index, name='explore_index'),
     url(r'^(participate)$', views.participate_index, name='participate_index'),
     url(r'^(participate/dashboard)$', views.participate_dashboard, name='participate_dashboard'),
-    # url(r'^(participate/signup)', views.sign_up, name='signup'),
+    url(r'^(participate/profile)$', views.create_profile, name='create_profile'),
+    url(r'^(participate/invite)$', views.invite_friends, name='invite_friends'),
+
 
     url(r'^participate/request$', views.create_request, name="create_request"),
     url(r'^participate/give$', views.create_gift, name="create_gift"),
