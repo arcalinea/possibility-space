@@ -10,6 +10,9 @@ urlpatterns = [
     url(r'^(participate/dashboard)$', views.participate_dashboard, name='participate_dashboard'),
     # url(r'^(participate/signup)', views.sign_up, name='signup'),
 
+    url(r'^participate/request$', views.create_request, name="create_request"),
+    url(r'^participate/give$', views.create_gift, name="create_gift"),
+
     url(r'^login/$', views.auth_login, name='auth_login'),
     url(r'^logout/$', views.logout, name='logout'),
     url(r'^register/$', views.register, name='register'),

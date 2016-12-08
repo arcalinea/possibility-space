@@ -65,6 +65,7 @@ def auth_login(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             logging.debug("User is authenticated")
+            login(request, user)
             # Redirect to a success page.
             return HttpResponseRedirect('/exchange/participate/dashboard')
         else:
@@ -81,3 +82,10 @@ def participate_dashboard(request, args):
     user = request.user
     logging.debug("CURRENT USER=%s", user)
     return render(request, 'exchange/participate/dashboard.html')
+
+#####
+def create_request(request):
+    logging.debug("CREATE REQUEST")
+
+def create_gift(request):
+    logging.debug("CREATE GIFT")
