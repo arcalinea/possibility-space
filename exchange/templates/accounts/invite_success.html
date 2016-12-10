@@ -1,0 +1,36 @@
+{% extends 'exchange/participate/layouts/base.html' %}
+
+{% block content %}
+  <div class="header">
+    <div class="container">
+
+       {% include "exchange/participate/layouts/navbar.html" %}
+
+        <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          <div class="panel panel-login">
+            <div class="panel-heading">
+              <div class="row">
+                <div class="panel-body">
+                  <div class="row">
+                    <div class="col-lg-12">
+
+                      <div>
+                        <p>
+                          Your friends have been invited. The unique invite code for this set of invitations is {{ invite }}. This can only be used 12 times.
+                        </p>
+                        <a href="/participate/dashboard">Back to user dashboard</a>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

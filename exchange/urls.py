@@ -11,6 +11,8 @@ urlpatterns = [
     url(r'^(participate/profile)$', views.create_profile, name='create_profile'),
 
     url(r'^(participate/invite)$', views.invite_friends, name='invite_friends'),
+    url(r'^(participate/invite/success)$', views.invite_success, name='invite_success'),
+    url(r'^(participate/enter-invite)$', views.enter_invite, name='enter_invite'),
 
     url(r'^participate/request$', views.create_request, name="create_request"),
     url(r'^participate/give$', views.create_gift, name="create_gift"),

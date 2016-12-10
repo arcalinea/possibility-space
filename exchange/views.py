@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 import logging, logging.handlers
@@ -12,6 +12,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.template.context_processors import csrf, request
 
 from django.core.mail import send_mail
+
+from utils import invite_code
 
 # Create your views here.
 
@@ -107,6 +109,8 @@ def create_profile(request, args):
 
 def invite_friends(request, args):
     if request.method == "POST":
+        # TODO: Count number of invites, add to user profile
+        # TODO: Generate invite code, send emails
         logging.debug("TEST INVITE FRIENDS")
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -118,10 +122,21 @@ def invite_friends(request, args):
         #     [email],
         #     fail_silently=False,
         # )
-        return HttpResponseRedirect('/exchange/participate/dashboard')
+        invite = invite_code()
+        logging.debug("INVITE CODE=%s", invite)
+        return redirect('/participate/invite/success', invite=invite)
     else:
         return render(request, 'accounts/invite_friends.html')
 
+def invite_success(request, invite):
+    print "IN INVITE SUCCESS", invite
+    return render(request, 'accounts/invite_success.html', {'invite': invite})
+
+def enter_invite(request, args):
+    if request.method == "POST":
+        return HttpResponse("Invitate code success")
+    else:
+        return render(request, 'accounts/enter_invite.html')
 
 def create_request(request):
     if request.method == "POST":
