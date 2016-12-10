@@ -14,7 +14,7 @@ class Profile(models.Model):
     address = models.CharField(max_length=500, blank=True)
     num_invited = models.IntegerField(default=0)
     def __str__(self):
-        return self.user_text
+        return self.user.username
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
@@ -30,21 +30,22 @@ class Category(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=200)
     def __str__(self):
-        return self.exchange_text
+        return self.name
 
 class Exchange(models.Model):
     name = models.CharField(max_length=200)
     description = models.CharField(max_length=1000)
+    link = models.CharField(max_length=200)
     request_date = models.DateTimeField('date requested')
     deliver_date = models.DateTimeField('date delivered')
     giver = models.ForeignKey(Profile, related_name='giver')
     receiver = models.ForeignKey(Profile, related_name='receiver')
-    category = models.ForeignKey(Category, related_name='category')
     def __str__(self):
-        return self.exchange_text
+        return self.name
 
 
-exchanges = Exchange.objects.all()
-# for exch in exchanges:
-#     print "Exchange name", exch.name
-#     print "Exchange description", exch.description
+profiles = Profile.objects.all()
+# print profiles
+for p in profiles:
+    print "Profile name", p.user
+    print "Profile description", p.bio

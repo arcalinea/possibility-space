@@ -2,34 +2,66 @@
 
 {% block content %}
   <div class="header">
-    <div class="enter text-center">
-      <h3>Dashboard</h3>
-    </div>
 
     <div class="container">
-      <div class="row">
-        <div class="panel">
-          <div class="row">
-            <div class="col-md-3">
-              <a href="/participate/profile"><button type="button" class="btn">Create Profile</button></a>
-            </div>
-            <div class="col-md-3">
-              <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
-            </div>
-            <div class="col-md-3">
-              <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
-            </div>
-            <div class="col-md-3">
-              <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
+
+      <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/exchange/participate/dashboard">Secret Santa Dashboard</a>
+          </div>
+          <div id="navbar">
+            <ul class="nav navbar-nav">
+              <li>
+                <a href="#">Your Profile</a>
+              </li>
+              <li>
+                <a href="/participate/invite">Invite Friends</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <div class="jumbotron">
+        <div class="row">
+          <div class="panel">
+            <div class="row">
+              <div class="col-md-6">
+                <p>
+                  Logged in as:
+                  {{ user }}
+                </p>
+                <p>
+                  Your bio:
+                  {{ profile.bio }}
+                </p>
+                <p>
+                  Your address:
+                  {{ profile.address }}
+                </p>
+                <p>
+                  Number of friends you've invited:
+                  {{ profile.num_invited }}
+                </p>
+
+                <a href="/participate/profile"><button type="button" class="btn">Create Profile</button></a>
+                <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
+              </div>
+
+              <div class="col-md-6">
+                <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
+                <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <p>
-      Logged in as:
-      {{ user }}
-    </p>
+      </div>
+
+
+
   </div>
 {% endblock %}
