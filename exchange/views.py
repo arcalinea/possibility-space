@@ -124,7 +124,7 @@ def invite_friends(request, args):
         # )
         invite = invite_code()
         logging.debug("INVITE CODE=%s", invite)
-        return redirect('/participate/invite/success', invite=invite)
+        return render(request, 'accounts/invite_success.html', {'invite': invite})
     else:
         return render(request, 'accounts/invite_friends.html')
 
