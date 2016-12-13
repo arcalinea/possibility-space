@@ -37,11 +37,13 @@ class Exchange(models.Model):
     description = models.CharField(max_length=1000)
     link = models.CharField(max_length=200)
     request_date = models.DateTimeField('date requested')
-    deliver_date = models.DateTimeField('date delivered')
-    giver = models.ForeignKey(Profile, related_name='giver')
+    deliver_date = models.DateTimeField('date delivered', blank=True, null=True)
+    giver = models.ForeignKey(Profile, related_name='giver', blank=True, null=True)
     receiver = models.ForeignKey(Profile, related_name='receiver')
+    category = models.ForeignKey(Category, null=True, default=1)
+    complete = models.BooleanField(default=False)
     def __str__(self):
-        return self.name
+        return self.description
 
 
 profiles = Profile.objects.all()

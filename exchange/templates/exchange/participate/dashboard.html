@@ -28,7 +28,7 @@
                   Number of friends you've invited:
                   {{ profile.num_invited }}
                 </p>
-                
+
                 {% if profile.bio != '' and profile.address != '' %}
                   <a href="/participate/profile"><button type="button" class="btn">Edit Profile</button></a>
                 {% else %}
@@ -39,6 +39,14 @@
               </div>
 
               <div class="col-md-6">
+                <div class="row">
+                  <p>
+                    Number of requests you've made:
+                  </p>
+                  <p>
+                    Number of gifts you've given:
+                  </p>
+                </div>
                 <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
                 <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
               </div>

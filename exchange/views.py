@@ -14,6 +14,7 @@ from django.template.context_processors import csrf, request
 from django.core.mail import send_mail
 
 from utils import invite_code
+import datetime, random
 
 # Create your views here.
 
@@ -96,14 +97,13 @@ def create_profile(request, args):
         logging.debug("TEST CREATE PROFILE")
         user_id = request.user.id
         profile = Profile.objects.get(id=user_id)
-        if profile is not None:
-            logging.debug("Profile User Name=%s", profile)
-            # You can't overwrite to edit this right now
-            profile.bio = request.POST.get('bio')
-            profile.address = request.POST.get('address')
-            logging.debug("Profile Bio=%s", profile.bio)
-            profile.save()
-            return HttpResponseRedirect('/exchange/participate/dashboard')
+        logging.debug("Profile User Name=%s", profile)
+        # You can't overwrite to edit this right now
+        profile.bio = request.POST.get('bio')
+        profile.address = request.POST.get('address')
+        logging.debug("Profile Bio=%s", profile.bio)
+        profile.save()
+        return HttpResponseRedirect('/exchange/participate/dashboard')
     else:
         return render(request, 'accounts/create_profile.html')
 
@@ -141,16 +141,21 @@ def enter_invite(request, args):
 def create_request(request):
     if request.method == "POST":
         user = request.user
-        category = request.POST.get('category')
+        c_id = request.POST.get('category')
+        print "CID", c_id
+        category = Category.objects.get(id=c_id)
+        print "CATEGORY", category
         link = request.POST.get('link')
         description = request.POST.get('description')
         receiver = Profile.objects.get(id=user.id)
         logging.debug("TEST receiver profile=%s", receiver)
-        gift = Exchange(link=link, description=description, receiver=receiver)
+        gift = Exchange(category=category, link=link, description=description, receiver=receiver, request_date=datetime.datetime.now())
         if gift is not None:
             print "gift desc: ", gift.description
             print "gift receiver: ", gift.receiver
-            # gift.save()
+            print "gift link: ", gift.link
+            print "gift category: ", gift.category
+            gift.save()
         return render(request, 'exchange/participate/dashboard.html')
     else:
         return render(request, 'exchange/participate/create_request.html')
@@ -159,6 +164,14 @@ def create_gift(request):
     # Return requests in these categories
     if request.method == "POST":
         logging.debug("TEST POST GIFT")
-        return render(request, 'exchange/participate/dashboard.html')
+        category = request.POST.get('category')
+        requests = Exchange.objects.filter(category=category, complete=False)
+        item = random.choice(requests)
+        print "RANDOM ITEM", item
+        return render(request, 'exchange/participate/confirm_gift.html', {'item': item})
     else:
         return render(request, 'exchange/participate/give_gift.html')
+
+def confirm_gift(request, item):
+    print "In CONFIRM GIFT"
+    return render(request, 'exchange/participate/comfirm_gift.html', {'item', item})
