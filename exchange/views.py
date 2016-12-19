@@ -83,12 +83,10 @@ def participate_dashboard(request, args):
     print "STORAGE", storage
     #TODO: Create or edit profile, depending on user profile status
     user = request.user
-    profile = Profile.objects.get(id=user.id)
     requests = Exchange.objects.filter(receiver=user.id)
     gifts = Exchange.objects.filter(giver=user.id)
-    logging.debug("Profile BIO=%s", profile.bio)
     logging.debug("CURRENT USER=%s", user)
-    return render(request, 'exchange/participate/dashboard.html', {'profile': profile, 'requests': requests, 'gifts': gifts})
+    return render(request, 'exchange/participate/dashboard.html', {'requests': requests, 'gifts': gifts})
 
 #####
 def create_profile(request, args):
@@ -106,6 +104,11 @@ def create_profile(request, args):
         return HttpResponseRedirect('/exchange/participate/dashboard')
     else:
         return render(request, 'accounts/create_profile.html')
+
+def display_profile(request, args):
+    user = request.user
+    profile = Profile.objects.get(id=user.id)
+    return render(request, 'accounts/profile.html', {'profile': profile})
 
 def invite_friends(request, args):
     if request.method == "POST":

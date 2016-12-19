@@ -5,23 +5,40 @@
     <div id="entry-panel">
       <img id="dodecahedron" src="/static/images/dodecahedron.png" />
 
+      {% if user.is_authenticated %}
+        <h3 class="greeting">Welcome back, {{user}}!</h3>
+      {% endif %}
+
       <div id="options">
         <div class="row">
           <div class="col-md-6"></div>
           <div class="col-md-6"></div>
         </div>
-        <div class="row">
-          <div class="col-md-6 login btn">
-            <a href="/login" id="login-form-link">LOGIN</a>
+        {% if user.is_authenticated %}
+          <div class="row">
+            <div class="col-md-12 btn">
+              <a href="/participate/dashboard" id="login-form-link">Return to Dashboard</a>
+            </div>
           </div>
-          <div class="col-md-6"></div>
-        </div>
-        <div class="row">
-          <div class="col-md-6"></div>
-          <div class="col-md-6 register btn">
-            <a href="/register" id="register-form-link">REGISTER</a>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6">
+            </div>
           </div>
-        </div>
+        {% else %}
+          <div class="row">
+            <div class="col-md-6 login btn">
+              <a href="/login" id="login-form-link">LOGIN</a>
+            </div>
+            <div class="col-md-6"></div>
+          </div>
+          <div class="row">
+            <div class="col-md-6"></div>
+            <div class="col-md-6 register btn">
+              <a href="/register" id="register-form-link">REGISTER</a>
+            </div>
+          </div>
+        {% endif %}
         <div class="row">
           <div class="col-md-6"></div>
           <div class="col-md-6"></div>

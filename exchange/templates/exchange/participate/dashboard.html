@@ -14,79 +14,56 @@
               {% for message in messages %}
                   <p>{{ message }}</p>
               {% endfor %}
-              <div class="col-md-6">
-                <div class="profile">
-                  <p>
-                    Logged in as:
-                    {{ user }}
-                  </p>
-                  <p>
-                    Your bio:
-                    {{ profile.bio }}
-                  </p>
-                  <p>
-                    Your address:
-                    {{ profile.address }}
-                  </p>
-                  <p>
-                    Number of friends you've invited:
-                    {{ profile.num_invited }}
-                  </p>
-                </div>
-                {% if profile.bio != '' and profile.address != '' %}
-                  <a href="/participate/profile"><button type="button" class="btn">Edit Profile</button></a>
-                {% else %}
-                  <a href="/participate/profile"><button type="button" class="btn">Create Profile</button></a>
-                {% endif %}
-
-                <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
-              </div>
-
-              <div class="col-md-6">
-                <div class="row">
-                  <p>
-                    Requests you've made:
-                    {% if requests %}
-                      {% for req in requests %}
-                        <p>
-                          {{ req }}
-                        </p>
-                      {% endfor %}
-                    {% else %}
-                      <p>
-                        You haven't yet created a request
-                        <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
-                      </p>
-                    {% endif %}
-                  </p>
-                  <p>
-                    Gifts you've given:
-                    {% if gifts %}
-                      {% for gift in gifts %}
-                        <p>
-                          {{ gift }}
-                        </p>
-                        <p>
-                          Give another gift:
-                          <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
-                        </p>
-                      {% endfor %}
-                    {% else %}
-                      <p>
-                        You haven't yet given a gift
-                        <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
-                      </p>
-                    {% endif %}
-                  </p>
-                </div>
-                <p>
-                  TEMP
-                </p>
-                <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
-                <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
-              </div>
-
             </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <p>
+                  Requests you've made:
+                  {% if requests %}
+                  {% for req in requests %}
+                  <p>
+                    {{ req }}
+                  </p>
+                  {% endfor %}
+                  {% else %}
+                  <p>
+                    You haven't yet created a request
+                    <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
+                  </p>
+                  {% endif %}
+                </p>
+              </div>
+              <div class="col-md-6">
+                <p>
+                  Gifts you've given:
+                  {% if gifts %}
+                  {% for gift in gifts %}
+                  <p>
+                    {{ gift }}
+                  </p>
+                  <p>
+                    Give another gift:
+                    <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
+                  </p>
+                  {% endfor %}
+                  {% else %}
+                  <p>
+                    You haven't yet given a gift
+                    <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
+                  </p>
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+            <!--
+            <p>
+              TEMP
+            </p>
+            <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
+            <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a> -->
+
+
           </div>
         </div>
       </div>

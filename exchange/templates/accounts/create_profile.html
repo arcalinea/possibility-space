@@ -6,10 +6,6 @@
 
       {% include "exchange/participate/layouts/navbar.html" %}
 
-      <div class="enter text-center">
-        <h3>Create Profile</h3>
-      </div>
-      
         <div class="row">
         <div class="col-md-6 col-md-offset-3">
           <div class="panel panel-login">
@@ -19,7 +15,7 @@
                   <div class="row">
                     <div class="col-lg-12">
 
-                      <form id="profile-form" action="/participate/profile" method="post" role="form">
+                      <form id="profile-form" action="/participate/create-profile" method="post" role="form">
                         {% csrf_token %}
                         <h3>Create a user profile</h3>
                         <div class="form-group">
@@ -49,10 +45,5 @@
         </div>
       </div>
     </div>
-
-    <p>
-      Logged in as:
-      {{ user }}
-    </p>
   </div>
 {% endblock %}

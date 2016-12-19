@@ -17,7 +17,10 @@ body {
   top: 20%;
   transform: scale(1.2, 1.2);
 }
-
+.greeting {
+  text-align: center;
+  color: grey;
+}
 #entry-panel .btn{
   font-size: 1.5em;
 }
@@ -35,6 +38,14 @@ body {
   border-radius: 5px;
   border-top: 3px;
   width: 46%;
+  margin: 2%;
+}
+#options .col-md-12 {
+  background-color: rgba(167, 164, 176, 0.8);
+  height: 40px;
+  border-radius: 5px;
+  border-top: 3px none;
+  width: 96%;
   margin: 2%;
 }
 .panel-login {
