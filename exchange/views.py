@@ -13,6 +13,8 @@ from django.template.context_processors import csrf, request
 
 from django.core.mail import send_mail
 
+from django.contrib import messages
+
 from utils import invite_code
 import datetime
 
@@ -77,6 +79,8 @@ def logout_view(request):
     return HttpResponseRedirect('/')
 
 def participate_dashboard(request, args):
+    storage = messages.get_messages(request)
+    print "STORAGE", storage
     #TODO: Create or edit profile, depending on user profile status
     user = request.user
     profile = Profile.objects.get(id=user.id)
@@ -136,11 +140,15 @@ def enter_invite(request, args):
 
 def create_request(request):
     form = RequestForm(request.POST or None)
-    if request.POST and form.is_valid():
-        gift_request = form.gift_request(request)
-        print "GIFT", gift_request
-        return HttpResponseRedirect('/exchange/participate/dashboard')
+    num_req = Exchange.objects.filter(receiver=request.user.id).count()
+    if num_req >= 1:
+        messages.error(request, "Looks like you've already created a request")
+        return redirect('/exchange/participate/dashboard')
     else:
+        if request.POST and form.is_valid():
+            gift_request = form.gift_request(request)
+            print "GIFT", gift_request
+            return HttpResponseRedirect('/exchange/participate/dashboard')
         return render(request, 'exchange/participate/create_request.html')
 
 def create_gift(request):
