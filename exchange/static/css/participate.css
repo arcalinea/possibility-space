@@ -10,6 +10,9 @@ body {
   background: -moz-linear-gradient(-10deg, black, #210b42, #4E485E); /* For Firefox 3.6 to 15 */
   background: linear-gradient(to -10deg, black, #210b42, #4E485E); /* Standard syntax */
 }
+.jumbotron {
+  min-height: 400px;
+}
 
 #dodecahedron {
   position: fixed;
@@ -144,4 +147,86 @@ body {
 	color: #fff;
 	background-color: #1CA347;
 	border-color: #1CA347;
+}
+
+
+
+ /********************************************************/
+/*****************CSS cube nonsense**********************/
+ .wrap {
+ 	perspective: 800px;
+ 	perspective-origin: 50% 100px;
+ }
+ .cube {
+	position: relative;
+	width: 200px;
+	transform-style: preserve-3d;
+}
+.cube div {
+	position: absolute;
+	width: 200px;
+	height: 200px;
+}
+.back {
+	transform: translateZ(-100px) rotateY(180deg);
+}
+.right {
+	transform: rotateY(-270deg) translateX(100px);
+	transform-origin: top right;
+}
+.left {
+	transform: rotateY(270deg) translateX(-100px);
+	transform-origin: center left;
+}
+.top {
+	transform: rotateX(-90deg) translateY(-100px);
+	transform-origin: top center;
+}
+.bottom {
+	transform: rotateX(90deg) translateY(100px);
+	transform-origin: bottom center;
+}
+.front {
+	transform: translateZ(100px);
+}
+@keyframes spin {
+	from { transform: rotateY(0); }
+	to { transform: rotateY(360deg); }
+}
+
+.cube {
+	animation: spin 10s infinite linear;
+}
+.no-spin {
+  animation: none !important;
+}
+.cube div {
+   background: rgba(255,255,255,0.1);
+   box-shadow: inset 0 0 30px rgba(125,125,125,0.8);
+   color: rgba(0,0,0,0.5);
+}
+.cube div.request {
+  background: rgba(123, 132, 213, 0.31) !important;
+  box-shadow: inset 0 0 30px rgba(170, 120 ,121,0.8) !important;
+}
+.cube-container {
+  background-color: white;
+  height: 300px;
+  width: 300px;
+}
+.cube-container .cube {
+  left: 100px;
+  top: 50px;
+  transform: rotateY(30deg);
+}
+.in-cube.text {
+  padding-top: 70px;
+  transform: rotateY(-30deg);
+  font-weight: bold;
+}
+.requests-gifts h3 {
+  padding-left: 50px;
+}
+.requests-gifts p {
+  padding-left: 50px;
 }
