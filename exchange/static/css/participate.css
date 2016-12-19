@@ -1,5 +1,41 @@
+html {
+  height: 100%;
+}
 body {
   background-color: black;
+  background-repeat: no-repeat;
+  font-family: 'Roboto', sans-serif;
+  background: -webkit-linear-gradient(-10deg, black, #210b42, #4E485E); /* For Safari 5.1 to 6.0 */
+  background: -o-linear-gradient(-10deg, black, #210b42, #4E485E); /* For Opera 11.1 to 12.0 */
+  background: -moz-linear-gradient(-10deg, black, #210b42, #4E485E); /* For Firefox 3.6 to 15 */
+  background: linear-gradient(to -10deg, black, #210b42, #4E485E); /* Standard syntax */
+}
+
+#dodecahedron {
+  position: fixed;
+  left: 10%;
+  top: 20%;
+  transform: scale(1.2, 1.2);
+}
+
+#entry-panel .btn{
+  font-size: 1.5em;
+}
+#entry-panel .btn a {
+  text-decoration: none;
+  color: black;
+}
+#entry-panel #options {
+  width: 300px;
+  margin: 110px auto;
+}
+#entry-panel #options .row .col-md-6 {
+  background-color: rgba(167, 164, 176, 0.8);
+  height: 40px;
+  border-radius: 5px;
+  border-top: 3px;
+  width: 46%;
+  margin: 2%;
 }
 .panel-login {
   margin-top: 90px;

@@ -1,28 +1,32 @@
 {% extends 'exchange/participate/layouts/base.html' %}
 
 {% block content %}
-  <div class="header">
 
+    <div id="entry-panel">
+      <img id="dodecahedron" src="/static/images/dodecahedron.png" />
 
-      <div class="container">
-          <div class="row">
-          <div class="col-md-6 col-md-offset-3">
-            <div class="panel panel-login">
-              <div class="panel-heading">
-                <div class="row">
-                  <div class="col-xs-6">
-                    <a href="/login" id="login-form-link">Login</a>
-                  </div>
-                  <div class="col-xs-6">
-                    <a href="/register" id="register-form-link">Register</a>
-                  </div>
-                </div>
-                <hr>
-              </div>
-            </div>
+      <div id="options">
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6 login btn">
+            <a href="/login" id="login-form-link">LOGIN</a>
+          </div>
+          <div class="col-md-6"></div>
+        </div>
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6 register btn">
+            <a href="/register" id="register-form-link">REGISTER</a>
           </div>
         </div>
+        <div class="row">
+          <div class="col-md-6"></div>
+          <div class="col-md-6"></div>
+        </div>
       </div>
+    </div>
 
-  </div>
 {% endblock %}
