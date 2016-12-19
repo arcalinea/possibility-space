@@ -17,9 +17,15 @@
                       <form id="login-form" action="/login/" method="post" role="form" style="display: block;">
                         {% csrf_token %}
 
-                        {% if form.errors %}
-                            <p>Your username and password didn't match. Please try again.</p>
+                        {% if login_form.errors %}
+                            <p>There was a login error.</p>
+                            <ul class='form-errors'>
+                                {% for error in login_form.non_field_errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
                         {% endif %}
+
                         <h3>Welcome back!</h3>
                         <div class="form-group">
                           <label for="username">Please enter the username and password you chose</label>

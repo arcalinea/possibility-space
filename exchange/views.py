@@ -5,7 +5,7 @@ import logging, logging.handlers
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from forms import RegistrationForm
+from forms import RegistrationForm, LoginForm
 from models import Profile, Category, Exchange
 
 from django.contrib.auth.forms import UserCreationForm
@@ -60,27 +60,42 @@ def register_success(request):
 
 def auth_login(request):
     logging.debug("IN LOGIN METHOD")
-    if request.method == "POST":
-        logging.debug("TEST POST")
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        logging.info('username=%s', username)
-        logging.info("password=%s", password)
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            logging.debug("User is authenticated")
+    form = LoginForm(request.POST or None)
+    if request.POST and form.is_valid():
+        logging.debug("FORM IS VALID")
+        user = form.login(request)
+        if user:
             login(request, user)
-            # Redirect to a success page.
+            #Redirect to a success page.
             return HttpResponseRedirect('/exchange/participate/dashboard')
-        else:
-            return HttpResponse("Not signed in")
-    else:
-        return render(request, 'accounts/login.html')
-        logging.debug("Not using post method")
+    return render(request, 'accounts/login.html', {'login_form': form})
+    logging.debug("Not using post method")
 
-def logout(request):
+
+    ######
+    # if request.method == "POST":
+    #     logging.debug("TEST POST")
+    #     username = request.POST.get('username')
+    #     password = request.POST.get('password')
+    #     logging.info('username=%s', username)
+    #     logging.info("password=%s", password)
+    #     user = authenticate(username=username, password=password)
+    #     if user is not None:
+    #         logging.debug("User is authenticated")
+    #         login(request, user)
+    #         # Redirect to a success page.
+    #         return HttpResponseRedirect('/exchange/participate/dashboard')
+    #     else:
+    #         error = "Login failed, please try again"
+    #         return render(request, 'accounts/login.html', {'error': error})
+    # else:
+    #     return render(request, 'accounts/login.html')
+    #     logging.debug("Not using post method")
+
+def logout_view(request):
     logging.debug("LOGGING OUT")
-    return render(request, '/accounts/logout.html')
+    logout(request)
+    return HttpResponseRedirect('/')
 
 def participate_dashboard(request, args):
     #TODO: Create or edit profile, depending on user profile status
@@ -167,7 +182,7 @@ def create_gift(request):
         category = request.POST.get('category')
         requests = Exchange.objects.filter(category=category, complete=False)
         item = random.choice(requests)
-        print "RANDOM ITEM", item
+        print "RANDOM ITEM:", item
         return render(request, 'exchange/participate/confirm_gift.html', {'item': item})
     else:
         return render(request, 'exchange/participate/give_gift.html')

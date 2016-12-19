@@ -12,23 +12,24 @@
           <div class="panel">
             <div class="row">
               <div class="col-md-6">
-                <p>
-                  Logged in as:
-                  {{ user }}
-                </p>
-                <p>
-                  Your bio:
-                  {{ profile.bio }}
-                </p>
-                <p>
-                  Your address:
-                  {{ profile.address }}
-                </p>
-                <p>
-                  Number of friends you've invited:
-                  {{ profile.num_invited }}
-                </p>
-
+                <div class="profile">
+                  <p>
+                    Logged in as:
+                    {{ user }}
+                  </p>
+                  <p>
+                    Your bio:
+                    {{ profile.bio }}
+                  </p>
+                  <p>
+                    Your address:
+                    {{ profile.address }}
+                  </p>
+                  <p>
+                    Number of friends you've invited:
+                    {{ profile.num_invited }}
+                  </p>
+                </div>
                 {% if profile.bio != '' and profile.address != '' %}
                   <a href="/participate/profile"><button type="button" class="btn">Edit Profile</button></a>
                 {% else %}
