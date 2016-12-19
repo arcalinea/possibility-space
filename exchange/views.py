@@ -5,7 +5,7 @@ import logging, logging.handlers
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm
 from models import Profile, Category, Exchange
 
 from django.contrib.auth.forms import UserCreationForm
@@ -14,7 +14,7 @@ from django.template.context_processors import csrf, request
 from django.core.mail import send_mail
 
 from utils import invite_code
-import datetime, random
+import datetime
 
 # Create your views here.
 
@@ -70,23 +70,6 @@ def auth_login(request):
             return HttpResponseRedirect('/exchange/participate/dashboard')
     return render(request, 'accounts/login.html', {'login_form': form})
     logging.debug("Not using post method")
-
-
-    ######
-    # if request.method == "POST":
-    #     username = request.POST.get('username')
-    #     password = request.POST.get('password')
-    #     user = authenticate(username=username, password=password)
-    #     if user is not None:
-    #         login(request, user)
-    #         # Redirect to a success page.
-    #         return HttpResponseRedirect('/exchange/participate/dashboard')
-    #     else:
-    #         error = "Login failed, please try again"
-    #         return render(request, 'accounts/login.html', {'error': error})
-    # else:
-    #     return render(request, 'accounts/login.html')
-    #     logging.debug("Not using post method")
 
 def logout_view(request):
     logging.debug("LOGGING OUT")
@@ -152,39 +135,31 @@ def enter_invite(request, args):
         return render(request, 'accounts/enter_invite.html')
 
 def create_request(request):
-    if request.method == "POST":
-        user = request.user
-        c_id = request.POST.get('category')
-        print "CID", c_id
-        category = Category.objects.get(id=c_id)
-        print "CATEGORY", category
-        link = request.POST.get('link')
-        description = request.POST.get('description')
-        receiver = Profile.objects.get(id=user.id)
-        logging.debug("TEST receiver profile=%s", receiver)
-        gift = Exchange(category=category, link=link, description=description, receiver=receiver, request_date=datetime.datetime.now())
-        if gift is not None:
-            print "gift desc: ", gift.description
-            print "gift receiver: ", gift.receiver
-            print "gift link: ", gift.link
-            print "gift category: ", gift.category
-            gift.save()
-        return render(request, 'exchange/participate/dashboard.html')
+    form = RequestForm(request.POST or None)
+    if request.POST and form.is_valid():
+        gift_request = form.gift_request(request)
+        print "GIFT", gift_request
+        return HttpResponseRedirect('/exchange/participate/dashboard')
     else:
         return render(request, 'exchange/participate/create_request.html')
 
 def create_gift(request):
-    # Return requests in these categories
-    if request.method == "POST":
-        logging.debug("TEST POST GIFT")
-        category = request.POST.get('category')
-        requests = Exchange.objects.filter(category=category, complete=False)
-        item = random.choice(requests)
-        print "RANDOM ITEM:", item
-        return render(request, 'exchange/participate/confirm_gift.html', {'item': item})
+    form = GiftMatch(request.POST or None)
+    if request.POST and form.is_valid():
+        match = form.match(request)
+        print "ITEM MATCH", match
+        return render(request, 'exchange/participate/accept_match.html', {'item': match})
     else:
         return render(request, 'exchange/participate/give_gift.html')
 
-def confirm_gift(request, item):
-    print "In CONFIRM GIFT"
-    return render(request, 'exchange/participate/comfirm_gift.html', {'item', item})
+def accept_match(request, item):
+    print "In ACCEPT MATCH"
+    return render(request, 'exchange/participate/accept_match.html', {'item', item})
+
+def confirm_gift(request):
+    print "IN CONFIRM GIFT"
+    return render(request, 'exchange/participate/confirm_gift.html')
+
+def complete_gift(request):
+    print "IN COMPLETE GIFT"
+    return HttpResponse("complete gift")

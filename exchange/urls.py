@@ -16,9 +16,9 @@ urlpatterns = [
 
     url(r'^participate/request$', views.create_request, name="create_request"),
     url(r'^participate/give$', views.create_gift, name="create_gift"),
+    url(r'^participate/give/match$', views.accept_match, name="accept_match"),
     url(r'^participate/give/confirm$', views.confirm_gift, name="confirm_gift"),
-    url(r'^participate/give/accept$', views.confirm_gift, name="confirm_gift"),
-    url(r'^participate/give/complete$', views.confirm_gift, name="confirm_gift"),
+    url(r'^participate/give/complete$', views.complete_gift, name="complete_gift"),
 
 
     url(r'^login/$', views.auth_login, name='auth_login'),

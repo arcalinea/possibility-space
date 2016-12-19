@@ -1,14 +1,47 @@
-import re
+import re, random, datetime
 from django import forms
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 
 from django.contrib.auth import authenticate
 
+from models import Category, Exchange, Profile
+
 # class SignupForm(forms.Form):
 #     username = forms.CharField(label='username', max_length='100')
 #     email = forms.CharField()
 #     password = forms.CharField()
+
+class GiftMatch(forms.Form):
+    category = forms.CharField(max_length=255, required=True)
+
+    def match(self, request):
+        category = self.cleaned_data.get('category')
+        requests = Exchange.objects.filter(category=category, complete=False)
+        item = random.choice(requests)
+        return item
+
+class RequestForm(forms.Form):
+    category = forms.CharField(max_length=255, required=True)
+    link = forms.CharField(max_length=255, required=False)
+    description = forms.CharField(max_length=1000, required=True)
+
+    def gift_request(self, request):
+        user = request.user
+        c_id = self.cleaned_data.get('category')
+        category = Category.objects.get(id=c_id)
+        link = self.cleaned_data.get('link')
+        description = self.cleaned_data.get('description')
+        receiver = Profile.objects.get(id=user.id)
+        gift = Exchange(category=category, link=link, description=description, receiver=receiver, request_date=datetime.datetime.now())
+        if gift is not None:
+            print "gift desc: ", gift.description
+            print "gift receiver: ", gift.receiver
+            print "gift link: ", gift.link
+            print "gift category: ", gift.category
+            gift.save()
+            return gift
+
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=255, required=True)
     password = forms.CharField(widget=forms.PasswordInput, required=True)
