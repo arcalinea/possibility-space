@@ -74,14 +74,10 @@ def auth_login(request):
 
     ######
     # if request.method == "POST":
-    #     logging.debug("TEST POST")
     #     username = request.POST.get('username')
     #     password = request.POST.get('password')
-    #     logging.info('username=%s', username)
-    #     logging.info("password=%s", password)
     #     user = authenticate(username=username, password=password)
     #     if user is not None:
-    #         logging.debug("User is authenticated")
     #         login(request, user)
     #         # Redirect to a success page.
     #         return HttpResponseRedirect('/exchange/participate/dashboard')
@@ -101,9 +97,11 @@ def participate_dashboard(request, args):
     #TODO: Create or edit profile, depending on user profile status
     user = request.user
     profile = Profile.objects.get(id=user.id)
+    requests = Exchange.objects.filter(receiver=user.id)
+    gifts = Exchange.objects.filter(giver=user.id)
     logging.debug("Profile BIO=%s", profile.bio)
     logging.debug("CURRENT USER=%s", user)
-    return render(request, 'exchange/participate/dashboard.html', {'profile': profile})
+    return render(request, 'exchange/participate/dashboard.html', {'profile': profile, 'requests': requests, 'gifts': gifts})
 
 #####
 def create_profile(request, args):

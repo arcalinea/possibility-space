@@ -42,12 +42,43 @@
               <div class="col-md-6">
                 <div class="row">
                   <p>
-                    Number of requests you've made:
+                    Requests you've made:
+                    {% if requests %}
+                      {% for req in requests %}
+                        <p>
+                          {{ req }}
+                        </p>
+                      {% endfor %}
+                    {% else %}
+                      <p>
+                        You haven't yet created a request
+                        <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
+                      </p>
+                    {% endif %}
                   </p>
                   <p>
-                    Number of gifts you've given:
+                    Gifts you've given:
+                    {% if gifts %}
+                      {% for gift in gifts %}
+                        <p>
+                          {{ gift }}
+                        </p>
+                        <p>
+                          Give another gift:
+                          <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
+                        </p>
+                      {% endfor %}
+                    {% else %}
+                      <p>
+                        You haven't yet given a gift
+                        <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
+                      </p>
+                    {% endif %}
                   </p>
                 </div>
+                <p>
+                  TEMP
+                </p>
                 <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
                 <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
               </div>
