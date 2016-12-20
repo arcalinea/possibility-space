@@ -51,6 +51,15 @@ body {
   width: 96%;
   margin: 2%;
 }
+.profile {
+  width: 70%;
+  margin: 0 auto;
+  padding: 1em;
+}
+
+
+
+/*Login*/
 .panel-login {
   margin-top: 30px;
 	border-color: #ccc;
@@ -208,6 +217,9 @@ body {
 .cube div.request {
   background: rgba(123, 132, 213, 0.31) !important;
   box-shadow: inset 0 0 30px rgba(170, 120 ,121,0.8) !important;
+}
+.cube div.pending {
+  background: rgba(234, 179, 222, 0.15) !important;
 }
 .cube-container {
   background-color: white;

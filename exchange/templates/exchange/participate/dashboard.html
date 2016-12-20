@@ -21,9 +21,25 @@
                   <h3>Ask</h3>
                   {% if requests %}
                     {% for req in requests %}
-                    <p>
-                      {{ req }}
-                    </p>
+                      <p>
+                        {{ req }}
+                      </p>
+                      <div class="cube-container">
+                        <div class="wrap">
+                          <div class="cube no-spin">
+                            <div class="pending front">
+                              <p class="in-cube text">
+                                <a href="/participate/request"></a>
+                              </p>
+                            </div>
+                            <div class="pending back"></div>
+                            <div class="pending top"></div>
+                            <div class="pending bottom"></div>
+                            <div class="pending left"></div>
+                            <div class="pending right"></div>
+                          </div>
+                        </div>
+                      </div>
                     {% endfor %}
                   {% else %}
                     <p>

@@ -5,9 +5,6 @@
 
     <div class="container">
       {% include "exchange/participate/layouts/navbar.html" %}
-      <div class="enter text-center">
-        <h3>Give Gift</h3>
-      </div>
 
         <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -20,17 +17,18 @@
 
                       <form id="register-form" action="/participate/give" method="post" role="form">
                         {% csrf_token %}
-                        <h3>To get started, pick a category for what you want to give:</h3>
+                        <h3>Pick some options and find a match</h3>
                         <div class="form-group">
+                          <label>Category</label>
                           <select name="category" tabindex="1" class="form-control" >
+                           <option value="1">Random</option>
                            <option value="2">Something you can purchase</option>
                            <option value="3">Something you can create</option>
-                           <option value="1">Random</option>
                           </select>
                         </div>
                         <div class="form-group">
-                          <label>Price range</label>
-                          <input type="text" name="link" id="link" tabindex="1" class="form-control" placeholder="Price Range" value="">
+                          <label>If purchasing a gift, what's the most you're willing to spend?</label>
+                          <input type="text" name="link" id="link" tabindex="1" class="form-control" placeholder="Maximum price" value="">
                         </div>
                         <div class="form-group">
                           <div class="row">

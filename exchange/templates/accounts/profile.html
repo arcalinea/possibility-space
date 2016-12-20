@@ -29,7 +29,7 @@
                     Number invited:
                     {{ profile.num_invited }}
                   </p>
-                </div>
+
                 {% if profile.bio != '' and profile.address != '' %}
                   <a href="/participate/create-profile"><button type="button" class="btn">Edit Profile</button></a>
                 {% else %}
@@ -37,6 +37,7 @@
                 {% endif %}
 
                 <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
+                </div>
               </div>
 
             </div>

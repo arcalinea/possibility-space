@@ -18,8 +18,14 @@ class GiftMatch(forms.Form):
     def match(self, request):
         category = self.cleaned_data.get('category')
         requests = Exchange.objects.filter(category=category, complete=False)
-        item = random.choice(requests)
-        return item
+        possibilities = []
+        for req in requests:
+            if req.receiver.id != request.user.id:
+                possibilities.append(req)
+        print "Possibilities", possibilities
+        gift_req = random.choice(possibilities)
+        return gift_req
+
 
 class RequestForm(forms.Form):
     category = forms.CharField(max_length=255, required=True)
@@ -78,3 +84,43 @@ class RegistrationForm(forms.Form):
             if self.cleaned_data['password'] != self.cleaned_data['confirm_password']:
                 raise forms.ValidationError(_("The two password fields did not match."))
         return self.cleaned_data
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'address']
+        widgets = {
+            'bio': forms.Textarea(
+                attrs={'class': 'form-control', 'placeholder': 'Bio', 'rows': '3', 'form': 'profile-form', 'name': 'bio'}
+            ),
+            'address': forms.Textarea(
+                attrs={'class': 'form-control', 'placeholder': 'Address', 'rows': '3', 'form': 'profile-form', 'name': 'address'}
+            ),
+        }
+    #
+    # bio = forms.CharField(
+    #     label='Bio',
+    #     widget=forms.Textarea(
+    #         attrs={'class': 'form-control', 'placeholder': 'Bio', 'rows': '3', 'form': 'profile-form', 'name': 'bio'}
+    #     )
+    # )
+    # address = forms.CharField(
+    #     label='Your Address',
+    #     widget=forms.Textarea(
+    #         attrs={'class': 'form-control', 'placeholder': 'Address', 'rows': '3', 'form': 'profile-form', 'name': 'address'}
+    #     )
+    # )
+
+
+
+
+        # if request.method == "POST":
+        #     logging.debug("TEST CREATE PROFILE")
+        #     user_id = request.user.id
+        #     profile = Profile.objects.get(id=user_id)
+        #     logging.debug("Profile User Name=%s", profile)
+        #     # You can't overwrite to edit this right now
+        #     profile.bio = request.POST.get('bio')
+        #     profile.address = request.POST.get('address')
+        #     logging.debug("Profile Bio=%s", profile.bio)
+        #     profile.save()

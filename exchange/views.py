@@ -5,7 +5,7 @@ import logging, logging.handlers
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm
+from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm, ProfileForm
 from models import Profile, Category, Exchange
 
 from django.contrib.auth.forms import UserCreationForm
@@ -90,20 +90,18 @@ def participate_dashboard(request, args):
 
 #####
 def create_profile(request, args):
-    # If user already has a profile, display?
+    user_id = request.user.id
+    logging.debug("TEST CREATE PROFILE")
+    profile = Profile.objects.get(id=user_id)
     if request.method == "POST":
-        logging.debug("TEST CREATE PROFILE")
-        user_id = request.user.id
-        profile = Profile.objects.get(id=user_id)
-        logging.debug("Profile User Name=%s", profile)
-        # You can't overwrite to edit this right now
-        profile.bio = request.POST.get('bio')
-        profile.address = request.POST.get('address')
-        logging.debug("Profile Bio=%s", profile.bio)
-        profile.save()
-        return HttpResponseRedirect('/exchange/participate/dashboard')
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            print "CREATE PROFILE FORM VALID"
+            form.save()
+            return HttpResponseRedirect('/participate/profile')
     else:
-        return render(request, 'accounts/create_profile.html')
+        form = ProfileForm(instance=profile)
+        return render(request, 'accounts/create_profile.html', {'form': form})
 
 def display_profile(request, args):
     user = request.user
