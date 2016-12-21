@@ -14,6 +14,10 @@ body {
   min-height: 400px;
 }
 
+.jumbotron .description {
+  font-size: 14px;
+}
+
 #dodecahedron {
   position: fixed;
   left: 10%;
@@ -238,7 +242,9 @@ body {
 }
 .requests-gifts h3 {
   padding-left: 50px;
+  padding-right: 50px;
 }
 .requests-gifts p {
   padding-left: 50px;
+  padding-right: 50px;
 }

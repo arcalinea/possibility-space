@@ -17,6 +17,7 @@ from django.contrib import messages
 
 from utils import invite_code
 import datetime
+import json
 
 # Create your views here.
 
@@ -155,9 +156,9 @@ def create_request(request):
 def create_gift(request):
     form = GiftMatch(request.POST or None)
     if request.POST and form.is_valid():
-        match = form.match(request)
-        print "ITEM MATCH", match
-        return render(request, 'exchange/participate/accept_match.html', {'item': match})
+        gift_req = form.match(request)
+        print "ITEM MATCH", gift_req
+        return render(request, 'exchange/participate/accept_match.html', {'item': gift_req})
     else:
         return render(request, 'exchange/participate/give_gift.html')
 
@@ -167,8 +168,21 @@ def accept_match(request, item):
 
 def confirm_gift(request):
     print "IN CONFIRM GIFT"
-    return render(request, 'exchange/participate/confirm_gift.html')
+    if request.POST and request.is_ajax():
+        print "Request was post"
+        item_id = request.POST['item_id']
+        match = Exchange.objects.get(id=item_id)
+        id = request.user.id
+        print "ID", id
+        profile = Profile.objects.get(id=id)
+        match.giver = profile
+        match.save()
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+    else:
+        return HttpResponseRedirect('/exchange/participate/dashboard')
 
-def complete_gift(request):
-    print "IN COMPLETE GIFT"
-    return HttpResponse("complete gift")
+def gift_complete(request):
+    return render(request, 'exchange/participate/gift_complete.html')
+
+def request_complete(request):
+    return render(request, 'exchange/participate/request_complete.html')
