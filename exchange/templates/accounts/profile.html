@@ -1,0 +1,51 @@
+{% extends 'exchange/participate/layouts/base.html' %}
+
+{% block content %}
+  <div class="header">
+
+    <div class="container">
+
+      {% include "exchange/participate/layouts/navbar.html" %}
+
+      <div class="jumbotron">
+        <div class="row">
+          <div class="panel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="profile">
+                  <h3>Profile</h3>
+                  <p>
+                    {{ user }}
+                  </p>
+                  <p>
+                    Bio:
+                    {{ profile.bio }}
+                  </p>
+                  <p>
+                    Address:
+                    {{ profile.address }}
+                  </p>
+                  <p>
+                    Number invited:
+                    {{ profile.num_invited }}
+                  </p>
+
+                {% if profile.bio != '' and profile.address != '' %}
+                  <a href="/participate/create-profile"><button type="button" class="btn">Edit Profile</button></a>
+                {% else %}
+                  <a href="/participate/create-profile"><button type="button" class="btn">Create Profile</button></a>
+                {% endif %}
+
+                <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+  </div>
+{% endblock %}

@@ -5,7 +5,7 @@ import logging, logging.handlers
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm
+from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm, ProfileForm
 from models import Profile, Category, Exchange
 
 from django.contrib.auth.forms import UserCreationForm
@@ -17,6 +17,7 @@ from django.contrib import messages
 
 from utils import invite_code
 import datetime
+import json
 
 # Create your views here.
 
@@ -83,29 +84,30 @@ def participate_dashboard(request, args):
     print "STORAGE", storage
     #TODO: Create or edit profile, depending on user profile status
     user = request.user
-    profile = Profile.objects.get(id=user.id)
     requests = Exchange.objects.filter(receiver=user.id)
     gifts = Exchange.objects.filter(giver=user.id)
-    logging.debug("Profile BIO=%s", profile.bio)
     logging.debug("CURRENT USER=%s", user)
-    return render(request, 'exchange/participate/dashboard.html', {'profile': profile, 'requests': requests, 'gifts': gifts})
+    return render(request, 'exchange/participate/dashboard.html', {'requests': requests, 'gifts': gifts})
 
 #####
 def create_profile(request, args):
-    # If user already has a profile, display?
+    user_id = request.user.id
+    logging.debug("TEST CREATE PROFILE")
+    profile = Profile.objects.get(id=user_id)
     if request.method == "POST":
-        logging.debug("TEST CREATE PROFILE")
-        user_id = request.user.id
-        profile = Profile.objects.get(id=user_id)
-        logging.debug("Profile User Name=%s", profile)
-        # You can't overwrite to edit this right now
-        profile.bio = request.POST.get('bio')
-        profile.address = request.POST.get('address')
-        logging.debug("Profile Bio=%s", profile.bio)
-        profile.save()
-        return HttpResponseRedirect('/exchange/participate/dashboard')
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            print "CREATE PROFILE FORM VALID"
+            form.save()
+            return HttpResponseRedirect('/participate/profile')
     else:
-        return render(request, 'accounts/create_profile.html')
+        form = ProfileForm(instance=profile)
+        return render(request, 'accounts/create_profile.html', {'form': form})
+
+def display_profile(request, args):
+    user = request.user
+    profile = Profile.objects.get(id=user.id)
+    return render(request, 'accounts/profile.html', {'profile': profile})
 
 def invite_friends(request, args):
     if request.method == "POST":
@@ -154,9 +156,9 @@ def create_request(request):
 def create_gift(request):
     form = GiftMatch(request.POST or None)
     if request.POST and form.is_valid():
-        match = form.match(request)
-        print "ITEM MATCH", match
-        return render(request, 'exchange/participate/accept_match.html', {'item': match})
+        gift_req = form.match(request)
+        print "ITEM MATCH", gift_req
+        return render(request, 'exchange/participate/accept_match.html', {'item': gift_req})
     else:
         return render(request, 'exchange/participate/give_gift.html')
 
@@ -166,8 +168,21 @@ def accept_match(request, item):
 
 def confirm_gift(request):
     print "IN CONFIRM GIFT"
-    return render(request, 'exchange/participate/confirm_gift.html')
+    if request.POST and request.is_ajax():
+        print "Request was post"
+        item_id = request.POST['item_id']
+        match = Exchange.objects.get(id=item_id)
+        id = request.user.id
+        print "ID", id
+        profile = Profile.objects.get(id=id)
+        match.giver = profile
+        match.save()
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+    else:
+        return HttpResponseRedirect('/exchange/participate/dashboard')
 
-def complete_gift(request):
-    print "IN COMPLETE GIFT"
-    return HttpResponse("complete gift")
+def gift_complete(request):
+    return render(request, 'exchange/participate/gift_complete.html')
+
+def request_complete(request):
+    return render(request, 'exchange/participate/request_complete.html')

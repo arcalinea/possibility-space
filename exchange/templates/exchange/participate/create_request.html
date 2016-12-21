@@ -5,9 +5,6 @@
 
     <div class="container">
         {% include "exchange/participate/layouts/navbar.html" %}
-        <div class="enter text-center">
-          <h3>Create Request</h3>
-        </div>
 
         <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -28,12 +25,13 @@
                               {% endfor %}
                           </ul>
                         {% else %}
-                            <h3>To get started, pick a category for what you want:</h3>
+                            <h3>Make a request, or leave it to chance</h3>
                             <div class="form-group">
+                              <label>Category</label>
                               <select name="category" tabindex="1" class="form-control" >
+                               <option value="1">Random</option>
                                <option value="2">Something that can be bought</option>
                                <option value="3">Something that can created</option>
-                               <option value="1">Random</option>
                               </select>
                             </div>
                             <div class="form-group">
@@ -47,7 +45,7 @@
                             <div class="form-group">
                               <div class="row">
                                 <div class="col-sm-6 col-sm-offset-3">
-                                  <input type="submit" name="request-submit" id="request-submit" tabindex="4" class="form-control btn btn-request" value="Ask and you shall receive!">
+                                  <input type="submit" name="request-submit" id="request-submit" tabindex="4" class="form-control btn btn-request" value="Ask">
                                 </div>
                               </div>
                             </div>
@@ -64,9 +62,5 @@
       </div>
     </div>
 
-    <p>
-      Logged in as:
-      {{ user }}
-    </p>
   </div>
 {% endblock %}

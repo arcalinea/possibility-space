@@ -5,10 +5,6 @@
 
     <div class="container">
       {% include "exchange/participate/layouts/navbar.html" %}
-      <div class="enter text-center">
-        <h3>Give Gift</h3>
-      </div>
-
         <div class="row">
         <div class="col-md-6 col-md-offset-3">
           <div class="panel panel-login">
@@ -17,13 +13,14 @@
                 <div class="panel-body">
                   <div class="row">
                     <div class="col-lg-12">
+                      {% csrf_token %}
                       Here's a random gift request in the category you selected. Do you want to accept this gift request?
-                      <div class="request-item">
+                      <div class="request-item" id={{item.id}}>
                         {{ item.description }}
                       </div>
                       If so, click Accept. If you want to pick a different request, click Match Again.
-                      <a href="/participate/give/confirm"><button type="button" class="btn">Accept</button></a>
-                      <a href="/participate/give/match"><button type="button" class="btn">Match Again</button></a>
+                      <button type="button" id="accept-match" class="btn">Accept</button>
+                      <a href="/participate/give"><button type="button" class="btn">Match Again</button></a>
                     </div>
                   </div>
                 </div>
