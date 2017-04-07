@@ -11,47 +11,112 @@
         <div class="row">
           <div class="panel">
             <div class="row">
-              <div class="col-md-6">
-                <p>
-                  Logged in as:
-                  {{ user }}
-                </p>
-                <p>
-                  Your bio:
-                  {{ profile.bio }}
-                </p>
-                <p>
-                  Your address:
-                  {{ profile.address }}
-                </p>
-                <p>
-                  Number of friends you've invited:
-                  {{ profile.num_invited }}
-                </p>
-
-                {% if profile.bio != '' and profile.address != '' %}
-                  <a href="/participate/profile"><button type="button" class="btn">Edit Profile</button></a>
-                {% else %}
-                  <a href="/participate/profile"><button type="button" class="btn">Create Profile</button></a>
-                {% endif %}
-
-                <a href="/participate/invite"><button type="button" class="btn">Invite friends</button></a>
-              </div>
-
-              <div class="col-md-6">
-                <div class="row">
-                  <p>
-                    Number of requests you've made:
-                  </p>
-                  <p>
-                    Number of gifts you've given:
-                  </p>
-                </div>
-                <a href="/participate/request"><button type="button" class="btn">Create Request</button></a>
-                <a href="/participate/give"><button type="button" class="btn">Give Gift</button></a>
-              </div>
-
+              {% for message in messages %}
+                  <p>{{ message }}</p>
+              {% endfor %}
             </div>
+
+            <div class="row requests-gifts">
+              <div class="col-md-6">
+                  <h3>Ask</h3>
+                  {% if requests %}
+                    {% for req in requests %}
+                      <p class="description">
+                        You asked for "{{ req }}". Remember to <a href="/participate/request/complete">record when someone gets it for you!</a>
+                      </p>
+                      <div class="cube-container">
+                        <div class="wrap">
+                          <div class="cube no-spin">
+                            <div class="pending front">
+                              <p class="in-cube text">
+                                <a href="">{{ req }}</a>
+                              </p>
+                            </div>
+                            <div class="pending back"></div>
+                            <div class="pending top"></div>
+                            <div class="pending bottom"></div>
+                            <div class="pending left"></div>
+                            <div class="pending right"></div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    <p>
+                      You haven't yet <a href="/participate/request">created a gift request.</a>
+                    </p>
+                    <div class="cube-container">
+                      <div class="wrap">
+                        <div class="cube no-spin">
+                          <div class="front">
+                            <p class="in-cube text">
+                              <a href="/participate/request">...?</a>
+                            </p>
+                          </div>
+                          <div class="back"></div>
+                          <div class="top"></div>
+                          <div class="bottom"></div>
+                          <div class="left"></div>
+                          <div class="right"></div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+              </div>
+              <div class="col-md-6">
+                <h3>Give</h3>
+                  {% if gifts %}
+                    {% for gift in gifts %}
+                      {% if gift.complete == False %}
+                        <p class="description">
+                          You're matched with {{ gift.receiver }}, who asked for "{{ gift }}". Be sure to <a href="/participate/give/complete">record when you complete the exchange!</a>
+                        </p>
+                        <div class="cube-container">
+                          <div class="wrap">
+                            <div class="cube no-spin">
+                              <div class="pending front">
+                                <p class="in-cube text">
+                                  <a href="">{{ gift }}</a>
+                                </p>
+                              </div>
+                              <div class="pending back"></div>
+                              <div class="pending top"></div>
+                              <div class="pending bottom"></div>
+                              <div class="pending left"></div>
+                              <div class="pending right"></div>
+                            </div>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                    <!-- <p>
+                      <a href="/participate/give">Give another gift!</a>
+                    </p> -->
+                  {% else %}
+                    <p>
+                      You haven't yet <a href="/participate/give">given a gift.</a>
+                    </p>
+                    <div class="cube-container">
+                      <div class="wrap">
+                        <div class="cube no-spin">
+                          <div class="front">
+                            <p class="in-cube text">
+                              <a href="/participate/give">...?</a>
+                            </p>
+                          </div>
+                          <div class="back"></div>
+                          <div class="top"></div>
+                          <div class="bottom"></div>
+                          <div class="left"></div>
+                          <div class="right"></div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endif %}
+              </div>
+            </div>
+
+
           </div>
         </div>
       </div>

@@ -17,7 +17,7 @@
 
                       <form id="invite-form" action="/participate/invite" method="post" role="form">
                         {% csrf_token %}
-                        <h3>Invite friends to join!</h3>
+                        <h3>Invite more people</h3>
                         <div class="form-group">
                           <label>Name</label>
                           <input type="text" name="name" id="name" tabindex="1" class="form-control" placeholder="Friend name" value="">
@@ -29,7 +29,7 @@
                         <div class="form-group">
                           <div class="row">
                             <div class="col-sm-6 col-sm-offset-3">
-                              <input type="submit" name="invite-submit" id="invite-submit" tabindex="4" class="form-control btn btn-invite" value="Invite Friends">
+                              <input type="submit" name="invite-submit" id="invite-submit" tabindex="4" class="form-control btn btn-invite" value="Invite">
                             </div>
                           </div>
                         </div>
@@ -45,10 +45,5 @@
         </div>
       </div>
     </div>
-
-    <p>
-      Logged in as:
-      {{ user }}
-    </p>
   </div>
 {% endblock %}

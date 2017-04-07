@@ -1,19 +1,28 @@
 $( document ).ready(function(){
   console.log("ready");
 
-    $('#login-form-link').click(function(e) {
-    $("#login-form").delay(100).fadeIn(100);
-    $("#register-form").fadeOut(100);
-    $('#register-form-link').removeClass('active');
-    $(this).addClass('active');
+  $('#accept-match').click(function(e){
+    var item_id = $('.request-item').attr('id');
+    console.log(csrftoken);
+    console.log(item_id);
     e.preventDefault();
-    });
-    $('#register-form-link').click(function(e) {
-      $("#register-form").delay(100).fadeIn(100);
-      $("#login-form").fadeOut(100);
-      $('#login-form-link').removeClass('active');
-      $(this).addClass('active');
-      e.preventDefault();
-    });
+    $.ajax({
+      type: "POST",
+      url: '/participate/give/confirm',
+      data: {
+        'item_id': item_id,
+        'csrfmiddlewaretoken':  csrftoken,
+      },
+      success: function(data, status){
+        console.log("Success");
+        window.location.href = 'dashboard'
+      },
+      error: function(status, error){
+        console.log("Error:", error);
+      }
+    })
+
+  })
+
 
 });

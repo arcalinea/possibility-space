@@ -5,7 +5,7 @@ import logging, logging.handlers
 
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from forms import RegistrationForm
+from forms import RegistrationForm, LoginForm, GiftMatch, RequestForm, ProfileForm
 from models import Profile, Category, Exchange
 
 from django.contrib.auth.forms import UserCreationForm
@@ -13,8 +13,11 @@ from django.template.context_processors import csrf, request
 
 from django.core.mail import send_mail
 
+from django.contrib import messages
+
 from utils import invite_code
-import datetime, random
+import datetime
+import json
 
 # Create your views here.
 
@@ -60,52 +63,51 @@ def register_success(request):
 
 def auth_login(request):
     logging.debug("IN LOGIN METHOD")
-    if request.method == "POST":
-        logging.debug("TEST POST")
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        logging.info('username=%s', username)
-        logging.info("password=%s", password)
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            logging.debug("User is authenticated")
+    form = LoginForm(request.POST or None)
+    if request.POST and form.is_valid():
+        logging.debug("FORM IS VALID")
+        user = form.login(request)
+        if user:
             login(request, user)
-            # Redirect to a success page.
+            #Redirect to a success page.
             return HttpResponseRedirect('/exchange/participate/dashboard')
-        else:
-            return HttpResponse("Not signed in")
-    else:
-        return render(request, 'accounts/login.html')
-        logging.debug("Not using post method")
+    return render(request, 'accounts/login.html', {'login_form': form})
+    logging.debug("Not using post method")
 
-def logout(request):
+def logout_view(request):
     logging.debug("LOGGING OUT")
-    return render(request, '/accounts/logout.html')
+    logout(request)
+    return HttpResponseRedirect('/')
 
 def participate_dashboard(request, args):
+    storage = messages.get_messages(request)
+    print "STORAGE", storage
     #TODO: Create or edit profile, depending on user profile status
     user = request.user
-    profile = Profile.objects.get(id=user.id)
-    logging.debug("Profile BIO=%s", profile.bio)
+    requests = Exchange.objects.filter(receiver=user.id)
+    gifts = Exchange.objects.filter(giver=user.id)
     logging.debug("CURRENT USER=%s", user)
-    return render(request, 'exchange/participate/dashboard.html', {'profile': profile})
+    return render(request, 'exchange/participate/dashboard.html', {'requests': requests, 'gifts': gifts})
 
 #####
 def create_profile(request, args):
-    # If user already has a profile, display?
+    user_id = request.user.id
+    logging.debug("TEST CREATE PROFILE")
+    profile = Profile.objects.get(id=user_id)
     if request.method == "POST":
-        logging.debug("TEST CREATE PROFILE")
-        user_id = request.user.id
-        profile = Profile.objects.get(id=user_id)
-        logging.debug("Profile User Name=%s", profile)
-        # You can't overwrite to edit this right now
-        profile.bio = request.POST.get('bio')
-        profile.address = request.POST.get('address')
-        logging.debug("Profile Bio=%s", profile.bio)
-        profile.save()
-        return HttpResponseRedirect('/exchange/participate/dashboard')
+        form = ProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            print "CREATE PROFILE FORM VALID"
+            form.save()
+            return HttpResponseRedirect('/participate/profile')
     else:
-        return render(request, 'accounts/create_profile.html')
+        form = ProfileForm(instance=profile)
+        return render(request, 'accounts/create_profile.html', {'form': form})
+
+def display_profile(request, args):
+    user = request.user
+    profile = Profile.objects.get(id=user.id)
+    return render(request, 'accounts/profile.html', {'profile': profile})
 
 def invite_friends(request, args):
     if request.method == "POST":
@@ -139,39 +141,48 @@ def enter_invite(request, args):
         return render(request, 'accounts/enter_invite.html')
 
 def create_request(request):
-    if request.method == "POST":
-        user = request.user
-        c_id = request.POST.get('category')
-        print "CID", c_id
-        category = Category.objects.get(id=c_id)
-        print "CATEGORY", category
-        link = request.POST.get('link')
-        description = request.POST.get('description')
-        receiver = Profile.objects.get(id=user.id)
-        logging.debug("TEST receiver profile=%s", receiver)
-        gift = Exchange(category=category, link=link, description=description, receiver=receiver, request_date=datetime.datetime.now())
-        if gift is not None:
-            print "gift desc: ", gift.description
-            print "gift receiver: ", gift.receiver
-            print "gift link: ", gift.link
-            print "gift category: ", gift.category
-            gift.save()
-        return render(request, 'exchange/participate/dashboard.html')
+    form = RequestForm(request.POST or None)
+    num_req = Exchange.objects.filter(receiver=request.user.id).count()
+    if num_req >= 1:
+        messages.error(request, "Looks like you've already created a request")
+        return redirect('/exchange/participate/dashboard')
     else:
+        if request.POST and form.is_valid():
+            gift_request = form.gift_request(request)
+            print "GIFT", gift_request
+            return HttpResponseRedirect('/exchange/participate/dashboard')
         return render(request, 'exchange/participate/create_request.html')
 
 def create_gift(request):
-    # Return requests in these categories
-    if request.method == "POST":
-        logging.debug("TEST POST GIFT")
-        category = request.POST.get('category')
-        requests = Exchange.objects.filter(category=category, complete=False)
-        item = random.choice(requests)
-        print "RANDOM ITEM", item
-        return render(request, 'exchange/participate/confirm_gift.html', {'item': item})
+    form = GiftMatch(request.POST or None)
+    if request.POST and form.is_valid():
+        gift_req = form.match(request)
+        print "ITEM MATCH", gift_req
+        return render(request, 'exchange/participate/accept_match.html', {'item': gift_req})
     else:
         return render(request, 'exchange/participate/give_gift.html')
 
-def confirm_gift(request, item):
-    print "In CONFIRM GIFT"
-    return render(request, 'exchange/participate/comfirm_gift.html', {'item', item})
+def accept_match(request, item):
+    print "In ACCEPT MATCH"
+    return render(request, 'exchange/participate/accept_match.html', {'item', item})
+
+def confirm_gift(request):
+    print "IN CONFIRM GIFT"
+    if request.POST and request.is_ajax():
+        print "Request was post"
+        item_id = request.POST['item_id']
+        match = Exchange.objects.get(id=item_id)
+        id = request.user.id
+        print "ID", id
+        profile = Profile.objects.get(id=id)
+        match.giver = profile
+        match.save()
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+    else:
+        return HttpResponseRedirect('/exchange/participate/dashboard')
+
+def gift_complete(request):
+    return render(request, 'exchange/participate/gift_complete.html')
+
+def request_complete(request):
+    return render(request, 'exchange/participate/request_complete.html')
